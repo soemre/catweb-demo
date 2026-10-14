@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Community Canvas",
+  "website": "https://example.org/demo-partners/11",
+  "logo": "/media/demo-content/demo-supporter-11.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Community Canvas",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Community Canvas illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 11,
+  "visible": true
+}

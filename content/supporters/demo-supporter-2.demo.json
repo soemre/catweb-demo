@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Open Pages Library",
+  "website": "https://example.org/demo-partners/2",
+  "logo": "/media/demo-content/demo-supporter-2.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Open Pages Library",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Open Pages Library illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 2,
+  "visible": true
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <rect width="1200" height="720" fill="#cce6df"/>
+  <rect x="80" y="65" width="330" height="270" rx="12" fill="#fff9ee"/>
+  <path d="M80 250Q190 105 300 250T410 230V335H80Z" fill="#338d78" opacity=".6"/>
+  <path d="M80 200H410M245 65V335" stroke="#cce6df" stroke-width="14"/>
+  <rect x="730" y="105" width="280" height="175" rx="12" fill="#338d78" opacity=".35"/>
+  <rect x="250" y="420" width="690" height="48" rx="24" fill="#338d78"/>
+  <path d="M300 465V670M875 465V670" stroke="#338d78" stroke-width="24"/>
+  <g fill="#fff9ee"><rect x="400" y="375" width="100" height="35" rx="5"/><rect x="625" y="365" width="90" height="50" rx="5"/></g>
+  <g fill="#338d78"><circle cx="555" cy="285" r="48"/><path d="M490 410V355Q555 300 620 355V410Z"/><circle cx="800" cy="320" r="42"/><path d="M745 415V380Q800 335 855 380V415Z"/></g>
+  <text x="70" y="590" font-family="sans-serif" font-size="44" font-weight="700" fill="#171717">The reading table</text>
+  <text x="70" y="645" font-family="sans-serif" font-size="24" fill="#171717">DEMO IMAGE 2 · fictional illustrated scene</text>
+  </svg>

@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Mosaic Arts Workshop",
+  "website": "https://example.org/demo-partners/4",
+  "logo": "/media/demo-content/demo-supporter-4.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Mosaic Arts Workshop",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Mosaic Arts Workshop illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 4,
+  "visible": true
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Prism Studio",
+  "website": "https://example.org/demo-partners/1",
+  "logo": "/media/demo-content/demo-supporter-1.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Prism Studio",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Prism Studio illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 1,
+  "visible": true
+}

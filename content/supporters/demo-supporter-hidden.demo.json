@@ -1,0 +1,6 @@
+{
+  "name": "Demo: A hidden supporter",
+  "website": "https://example.org/demo-hidden-partner",
+  "visible": false,
+  "order": 99
+}

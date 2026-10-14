@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Studio Without Walls",
+  "website": "https://example.org/demo-partners/9",
+  "logo": "/media/demo-content/demo-supporter-9.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Studio Without Walls",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Studio Without Walls illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 9,
+  "visible": true
+}

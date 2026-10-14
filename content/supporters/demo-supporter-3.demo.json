@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Common Ground Collective",
+  "website": "https://example.org/demo-partners/3",
+  "logo": "/media/demo-content/demo-supporter-3.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Common Ground Collective",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Common Ground Collective illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 3,
+  "visible": true
+}

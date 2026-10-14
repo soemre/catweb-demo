@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <rect width="1200" height="720" fill="#f1e9dc"/>
+  <rect x="40" y="40" width="1120" height="640" rx="48" fill="#7568bd"/>
+  <circle cx="930" cy="250" r="150" fill="#ffffff" opacity=".3"/>
+  <path d="M100 540 Q340 280 590 540 T1080 500" fill="none" stroke="#fff9ee" stroke-width="70" stroke-linecap="round"/>
+  <text x="100" y="155" fill="#171717" font-family="sans-serif" font-size="28" font-weight="700">LOCAL DEMO · COLLETTIVO ALAN TURING</text>
+  <text x="100" y="325" fill="#171717" font-family="sans-serif" font-size="76" font-weight="700">Community studio</text>
+  <text x="100" y="625" fill="#171717" font-family="sans-serif" font-size="24">Illustration 02 · fictional preview artwork</text>
+</svg>

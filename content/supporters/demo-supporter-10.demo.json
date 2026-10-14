@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Paper Lanterns",
+  "website": "https://example.org/demo-partners/10",
+  "logo": "/media/demo-content/demo-supporter-10.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Paper Lanterns",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Paper Lanterns illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 10,
+  "visible": true
+}

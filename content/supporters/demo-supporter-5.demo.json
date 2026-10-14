@@ -1,0 +1,9 @@
+{
+  "name": "Demo: The Welcome Table",
+  "website": "https://example.org/demo-partners/5",
+  "logo": "/media/demo-content/demo-supporter-5.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner The Welcome Table",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. The Welcome Table illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 5,
+  "visible": true
+}

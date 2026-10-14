@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Everyday Archive",
+  "website": "https://example.org/demo-partners/8",
+  "logo": "/media/demo-content/demo-supporter-8.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Everyday Archive",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Everyday Archive illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 8,
+  "visible": true
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Shared Horizons",
+  "website": "https://example.org/demo-partners/6",
+  "logo": "/media/demo-content/demo-supporter-6.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Shared Horizons",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Shared Horizons illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 6,
+  "visible": true
+}

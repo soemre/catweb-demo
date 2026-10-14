@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Open Door Projects",
+  "website": "https://example.org/demo-partners/12",
+  "logo": "/media/demo-content/demo-supporter-12.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Open Door Projects",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Open Door Projects illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 12,
+  "visible": true
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Demo: Rainbow Print Lab",
+  "website": "https://example.org/demo-partners/7",
+  "logo": "/media/demo-content/demo-supporter-7.demo.svg",
+  "logoAlt": "Logo for the fictional demo partner Rainbow Print Lab",
+  "relationship": "A fictional supporting organisation used to preview the supporter section. Rainbow Print Lab illustrates how a partner description and website link fit alongside an optional logo.",
+  "order": 7,
+  "visible": true
+}
