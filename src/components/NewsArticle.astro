@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages, site } from '../lib/content';
+import { formatDate } from '../lib/dates';
+import RichText from './RichText.astro';
+import PhotoHeader from './PhotoHeader.astro';
+import Sticker from './Sticker.astro';
+import ReturnLinks from './ReturnLinks.astro';
+interface Props { entry: CollectionEntry<'news'>; detail?: boolean; }
+const { entry, detail = false } = Astro.props, post = entry.data;
+const Title = detail ? 'h1' : 'h2';
+const photos = [
+  ...(post.image ? [{ image: post.image, alt: post.imageAlt, caption: '' }] : []),
+  ...(post.gallery ?? []),
+].filter((photo, index, all) => photo.image && all.findIndex((item) => item.image === photo.image) === index);
+---
+<article class="news-article" aria-labelledby="news-article-title" data-news-article={post.slug}>
+  {detail && <ReturnLinks class="news-return-links" allowed={post.category === 'milestone' ? ['home', 'news', 'milestones'] : ['home', 'news']} defaults={post.category === 'milestone' ? ['news', 'milestones'] : ['news']} />}
+  <PhotoHeader photos={photos} slug={post.slug} />
+  <div class="news-title-row">
+    <Title class="news-article-title" id="news-article-title" tabindex="-1">{post.title}</Title>
+    <Sticker src={post.sticker} class="news-reader-sticker" />
+  </div>
+  <p class="news-article-meta muted">{pages.news.categories[post.category]} · {site.ui.post.publishedOn} <time datetime={post.date}>{formatDate(post.date!, site.dateLocale)}</time>{post.author && <> · {site.ui.post.author} {post.author}</>}</p>
+  {post.category === 'milestone' && <p class="news-article-meta muted">{site.ui.post.milestoneDate} <time datetime={post.milestoneDate}>{formatDate(post.milestoneDate!, site.dateLocale)}</time></p>}
+  <p class="news-article-summary">{post.summary}</p>
+  <RichText text={entry.body} />
+</article>

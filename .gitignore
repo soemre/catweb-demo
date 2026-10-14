@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.env*
+!.env.example
+test-results/
+playwright-report/
+.test-site/
+result
+
+# Local demo records are loaded normally by Astro, but never tracked by Git.
+/content/**/*.demo.md
+/content/**/*.demo.json
+/public/media/demo-content/

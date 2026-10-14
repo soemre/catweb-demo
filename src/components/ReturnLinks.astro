@@ -1,0 +1,12 @@
+---
+import { site } from '../lib/content';
+type Origin = 'home' | 'events' | 'milestones' | 'news' | 'resources';
+interface Props { allowed: Origin[]; defaults: Origin[]; class?: string; }
+const { allowed, defaults, class: className } = Astro.props;
+const labels = { home: site.ui.post.backHome, events: site.ui.post.backEvents, milestones: site.ui.post.backMilestones, news: site.ui.post.backNews, resources: site.ui.post.backResources };
+---
+<!-- Server-rendered defaults work without JavaScript; return-links.ts narrows them to the page the visitor came from. -->
+<div class={className} data-return-links data-return-allowed={allowed.join(' ')}>
+  {allowed.map((origin) => <a href={site.navigation[origin].url} data-return-to={origin} data-news-back={origin === 'news' ? '' : undefined} hidden={!defaults.includes(origin)}><span aria-hidden="true">← </span>{labels[origin]}</a>)}
+</div>
+<script src="../scripts/return-links.ts"></script>

@@ -1,0 +1,7 @@
+---
+import { renderMarkdown } from '../lib/markdown';
+interface Props { text?: string; }
+const { text = '' } = Astro.props;
+const code = text ? await renderMarkdown(text) : '';
+---
+{text && <div class="prose" set:html={code} />}

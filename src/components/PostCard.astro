@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages, site } from '../lib/content';
+import { formatDate, formatInstant } from '../lib/dates';
+interface Props { entry: CollectionEntry<'events'> | CollectionEntry<'news'>; }
+const { entry } = Astro.props;
+const data = entry.data;
+const href = `/${entry.collection}/${data.slug}/`;
+---
+<article class="card" data-event-card={entry.collection === 'events' ? data.slug : undefined}>
+  {data.image && <img src={data.image} alt={data.imageAlt} loading="lazy" class="cover" />}
+  <h3><a href={href}>{data.title}</a></h3>
+  {entry.collection === 'events' ? <>
+    <p class="muted"><time datetime={entry.data.start}>{formatInstant(entry.data.start!, site.dateLocale)}</time> – <time datetime={entry.data.end}>{formatInstant(entry.data.end!, site.dateLocale)}</time></p>
+    <p class="event-status" data-event-status={data.slug} aria-live="polite">{entry.data.cancelled ? site.ui.event.cancelled : ''}</p>
+  </> : <p class="muted">{pages.news.categories[entry.data.category]} · <time datetime={entry.data.date}>{formatDate(entry.data.date!, site.dateLocale)}</time></p>}
+  <p>{data.summary}</p>
+</article>

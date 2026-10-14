@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages, site } from '../lib/content';
+import { formatDate } from '../lib/dates';
+import Sticker from './Sticker.astro';
+
+interface Props { entries: CollectionEntry<'news'>[]; }
+const { entries } = Astro.props;
+const page = pages.milestones;
+// Explicit grid positions let the visual path reverse without reversing DOM/tab order.
+const positionFor = (index: number, columns: number) => {
+  const row = Math.floor(index / columns), offset = index % columns, forward = row % 2 === 0;
+  return {
+    row: row + 1,
+    column: forward ? offset + 1 : columns - offset,
+    connection: offset === columns - 1 ? (forward ? 'right' : 'left') : (forward ? 'forward' : 'backward'),
+  };
+};
+---
+<section aria-labelledby="milestone-timeline-heading">
+  <h2 id="milestone-timeline-heading">{page.timelineHeading}</h2>
+  {entries.length ? <ol class="milestone-timeline" data-milestone-timeline>
+    {entries.map(({ data }, index) => {
+      const wide = positionFor(index, 3), narrow = positionFor(index, 2);
+      const titleId = `milestone-title-${data.slug}`, dateId = `milestone-date-${data.slug}`, hintId = `milestone-hint-${data.slug}`;
+      return <li class="milestone" data-milestone={data.slug} style={`--wide-row: ${wide.row}; --wide-column: ${wide.column}; --narrow-row: ${narrow.row}; --narrow-column: ${narrow.column};`}>
+        {index < entries.length - 1 && <>
+          <span class:list={['milestone-connection', 'milestone-connection-wide', `connection-${wide.connection}`]} aria-hidden="true" />
+          <span class:list={['milestone-connection', 'milestone-connection-narrow', `connection-${narrow.connection}`]} aria-hidden="true" />
+        </>}
+        <a class="milestone-link" href={`/news/${data.slug}/`} aria-labelledby={titleId} aria-describedby={`${dateId} ${hintId}`}>
+          <span class="milestone-marker" aria-hidden="true">
+            <Sticker src={data.sticker} index={index} class="milestone-sticker" />
+            <svg class="milestone-ring" viewBox="0 0 56 56" fill="none" focusable="false"><circle cx="28" cy="28" r="22" pathLength="1" /></svg>
+            <span class="milestone-dot" />
+          </span>
+          <h3 class="milestone-title" id={titleId}>{data.title}</h3>
+          <time class="milestone-date" id={dateId} datetime={data.milestoneDate}>{formatDate(data.milestoneDate!, site.dateLocale)}</time>
+          <span class="milestone-hint" id={hintId} role="tooltip">{page.learnMore}</span>
+        </a>
+      </li>;
+    })}
+  </ol> : <p class="empty" data-milestone-empty>{page.empty}</p>}
+</section>
+
+<style>
+  .milestone-timeline {
+    --marker-size: 3.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    isolation: isolate;
+  }
+  .milestone { position: relative; min-width: 0; min-height: 13rem; grid-row: var(--wide-row); grid-column: var(--wide-column); }
+  .milestone-link {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    height: 100%;
+    padding: 0 .8rem 3.5rem;
+    border-radius: .75rem;
+    text-align: center;
+    text-decoration: none;
+  }
+  .milestone-marker { position: relative; display: grid; place-items: center; width: var(--marker-size); height: var(--marker-size); flex-shrink: 0; margin-bottom: .5rem; }
+  .milestone-marker :global(.milestone-sticker) { --sticker-size: clamp(2.6rem, 7vw, 4rem); position: absolute; right: calc(100% - .3rem); top: -.65rem; }
+  .milestone:nth-child(even) :global(.milestone-sticker) { right: auto; left: calc(100% - .3rem); }
+  .milestone-dot { width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--text); transition: transform .2s ease; }
+  .milestone-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .milestone-ring circle { stroke: var(--text); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .4s ease; }
+  .milestone-title { margin: 0; font-size: clamp(1rem, 2.5vw, 1.2rem); line-height: 1.3; }
+  .milestone-date { color: var(--muted); font-size: .9rem; }
+  .milestone-hint { position: absolute; top: 0; left: 50%; z-index: 2; width: max-content; max-width: calc(100% - .5rem); padding: .35rem .55rem; border: 1px solid var(--border); border-radius: .4rem; background: var(--surface-raised); color: var(--text); box-shadow: 0 2px 6px rgb(0 0 0 / .12); font-size: .8rem; line-height: 1.4; visibility: hidden; opacity: 0; transform: translate(-50%, calc(-100% - .35rem)); transition: opacity .2s ease; }
+  /* A transparent bridge keeps the tooltip open when the pointer moves onto it. */
+  .milestone-hint::after { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: .4rem; }
+  .milestone-link:hover .milestone-ring circle, .milestone-link:focus-visible .milestone-ring circle { stroke-dashoffset: 0; }
+  .milestone-link:hover .milestone-dot, .milestone-link:focus-visible .milestone-dot { transform: scale(1.15); }
+  .milestone-link:hover .milestone-title, .milestone-link:focus-visible .milestone-title { text-decoration: underline; text-underline-offset: .22em; }
+  .milestone-link:hover .milestone-hint, .milestone-link:focus-visible .milestone-hint { visibility: visible; opacity: 1; }
+
+  /* Each segment meets the next dot; turns stretch with their row's tallest title. */
+  .milestone-connection { position: absolute; z-index: 0; top: calc(var(--marker-size) / 2 - 1px); width: 100%; height: 0; border-top: 2px solid var(--muted); pointer-events: none; }
+  .connection-forward { left: 50%; }
+  .connection-backward { right: 50%; }
+  .connection-right, .connection-left { width: 50%; height: calc(100% + 2px); border-bottom: 2px solid var(--muted); }
+  .connection-right { left: 50%; border-right: 2px solid var(--muted); border-radius: 2rem; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .connection-left { right: 50%; border-left: 2px solid var(--muted); border-radius: 2rem; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .milestone-connection-narrow { display: none; }
+  @media (max-width: 38rem) {
+    .milestone-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .milestone { grid-row: var(--narrow-row); grid-column: var(--narrow-column); }
+    .milestone-link { padding-inline: .65rem; }
+    .milestone-connection-wide { display: none; }
+    .milestone-connection-narrow { display: block; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .milestone-ring circle, .milestone-dot, .milestone-hint { transition: none; }
+  }
+</style>

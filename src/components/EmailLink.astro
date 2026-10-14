@@ -1,0 +1,7 @@
+---
+import { site } from '../lib/content';
+interface Props { class?: string; }
+const { class: className = 'contact-email' } = Astro.props;
+const [local, domain] = site.contact.email.split('@');
+---
+<a class={className} href={`mailto:${site.contact.email}`} aria-label={site.contact.email}>{local}@<wbr />{domain}</a>

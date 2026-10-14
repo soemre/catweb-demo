@@ -1,0 +1,22 @@
+---
+import { site } from '../lib/content';
+import type { EventData } from '../lib/schemas';
+import { formatInstant } from '../lib/dates';
+import RichText from './RichText.astro';
+interface Props { event: EventData; }
+const { event } = Astro.props;
+const labels = site.ui.event;
+const payload = { event, labels, locale: site.dateLocale };
+---
+<section data-registration>
+  <h2>{labels.registration}</h2>
+  <script type="application/json" data-registration-data set:html={JSON.stringify(payload).replaceAll('<', '\\u003c')} />
+  <p data-registration-state role="status">{event.cancelled ? labels.cancelled : event.manuallyClosed ? labels.closed : !event.registrationRequired ? labels.noRegistration : labels.checkWithJavaScript}</p>
+  <div data-registration-action></div>
+  <RichText text={event.attendance} />
+  {(event.registrationOpens || event.registrationCloses) && <dl>
+    {event.registrationOpens && <><dt>{labels.opening}</dt><dd><time datetime={event.registrationOpens}>{formatInstant(event.registrationOpens, site.dateLocale)}</time></dd></>}
+    {event.registrationCloses && <><dt>{labels.closing}</dt><dd><time datetime={event.registrationCloses}>{formatInstant(event.registrationCloses, site.dateLocale)}</time></dd></>}
+  </dl>}
+</section>
+<script src="../scripts/registration.ts"></script>

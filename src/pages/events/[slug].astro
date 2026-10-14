@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getEvents, site } from '../../lib/content';
+import { formatInstant } from '../../lib/dates';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import RichText from '../../components/RichText.astro';
+import Registration from '../../components/Registration.astro';
+import ReturnLinks from '../../components/ReturnLinks.astro';
+export async function getStaticPaths() { return (await getEvents()).map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } })); }
+interface Props { entry: CollectionEntry<'events'>; }
+const { entry } = Astro.props;
+const event = entry.data, labels = site.ui.event;
+---
+<SiteLayout title={event.title} description={event.summary} image={event.image} seo={event.seo}>
+  <ReturnLinks class="return-links" allowed={['home', 'events']} defaults={['events']} />
+  <h1>{event.title}</h1><p>{event.summary}</p>
+  <p class="event-status" data-post-event-status aria-live="polite"></p>
+  {event.image && <img class="cover" src={event.image} alt={event.imageAlt} />}
+  {event.cancelled && <aside class="card"><strong>{labels.cancelled}</strong><RichText text={event.cancellationNotice} /></aside>}
+  <dl>
+    <dt>{labels.start}</dt><dd><time datetime={event.start}>{formatInstant(event.start!, site.dateLocale)}</time></dd>
+    <dt>{labels.end}</dt><dd><time datetime={event.end}>{formatInstant(event.end!, site.dateLocale)}</time></dd>
+    {(['location', 'audience', 'language', 'cost', 'accessibility'] as const).map((field) => event[field] && <><dt>{labels[field]}</dt><dd><RichText text={event[field]} /></dd></>)}
+    {event.venueUrl && <><dt>{labels.venueLink}</dt><dd><a href={event.venueUrl}>{labels.venueLink}</a></dd></>}
+  </dl>
+  <RichText text={entry.body} />
+  <Registration event={event} />
+  {event.recap && <section><h2>{labels.recap}</h2><RichText text={event.recap} /></section>}
+  {event.gallery.some((photo) => photo.image) && <section><h2>{labels.gallery}</h2><div class="gallery">{event.gallery.filter((photo) => photo.image).map((photo) => <figure><img src={photo.image} alt={photo.alt} loading="lazy" />{photo.caption && <figcaption>{photo.caption}</figcaption>}</figure>)}</div></section>}
+  {event.materials.length > 0 && <section><h2>{labels.materials}</h2><ul>{event.materials.map((material) => <li><a href={material.url}>{material.title}</a></li>)}</ul></section>}
+</SiteLayout>

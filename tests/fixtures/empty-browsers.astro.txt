@@ -1,0 +1,11 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import NewsWorkspace from '../../components/NewsWorkspace.astro';
+import EventWorkspace from '../../components/EventWorkspace.astro';
+export function getStaticPaths() { return ['news', 'events'].map((kind) => ({ params: { kind }, props: { kind } })); }
+interface Props { kind: string; }
+const { kind } = Astro.props;
+---
+<SiteLayout title="Empty browser fixture" wide>
+  {kind === 'news' ? <NewsWorkspace entries={[]} /> : <EventWorkspace entries={[]} />}
+</SiteLayout>

@@ -1,0 +1,11 @@
+---
+import { pages, getMilestones } from '../../lib/content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import MilestoneTimeline from '../../components/MilestoneTimeline.astro';
+const page = pages.milestones, entries = await getMilestones();
+---
+<SiteLayout title={page.title} description={page.intro} seo={page.seo}>
+  <PageHeader headline={page.headline} intro={page.intro} />
+  <MilestoneTimeline entries={entries} />
+</SiteLayout>

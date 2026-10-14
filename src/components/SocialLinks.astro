@@ -1,0 +1,13 @@
+---
+import { site, pages } from '../lib/content';
+import ContactIcon from './ContactIcon.astro';
+const accounts = ['telegram', 'instagram', 'linkedin'] as const;
+---
+<ul class="social-links">
+  {accounts.map((account) => <li>
+    <a class="social-link" href={site.contact[account]} aria-label={pages.contact.labels[account]} title={pages.contact.labels[account]} data-tooltip={pages.contact.labels[account]}>
+      <ContactIcon name={account} />
+      <span class="sr-only">{pages.contact.labels[account]}</span>
+    </a>
+  </li>)}
+</ul>

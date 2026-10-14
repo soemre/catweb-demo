@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages, site } from '../lib/content';
+import { formatInstant } from '../lib/dates';
+import Sticker from './Sticker.astro';
+interface Props { entry: CollectionEntry<'events'>; }
+const { entry } = Astro.props, event = entry.data;
+const labels = pages.home.events.countdown;
+const units = ['days', 'hours', 'minutes', 'seconds'] as const;
+---
+<article class="home-event-card" data-event-card={event.slug} aria-labelledby={`home-event-title-${event.slug}`}>
+  <div class="event-countdown" data-countdown role="timer" aria-live="off" aria-atomic="true" aria-label="">
+    <div class="countdown-units" aria-hidden="true">
+      {units.map((unit) => <div class="countdown-unit">
+        <div class="countdown-digits" data-countdown-unit={unit}><span class="countdown-digit">0</span><span class="countdown-digit">0</span></div>
+        <span class="countdown-unit-label">{labels[unit]}</span>
+      </div>)}
+    </div>
+  </div>
+  <div class="home-event-title-row">
+    <h3 id={`home-event-title-${event.slug}`}><a href={`/events/${event.slug}/`}>{event.title}</a></h3>
+    <Sticker src={event.sticker || event.calendarImage} class="home-event-sticker" />
+  </div>
+  <p class="home-event-dates"><time datetime={event.start}>{formatInstant(event.start!, site.dateLocale)}</time><br />– <time datetime={event.end}>{formatInstant(event.end!, site.dateLocale)}</time></p>
+  {event.location && <p class="home-event-location">{event.location}</p>}
+  <p class="home-event-summary">{event.summary}</p>
+</article>

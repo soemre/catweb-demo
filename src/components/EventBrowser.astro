@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages, site } from '../lib/content';
+import { jsonForHtml } from '../lib/seo';
+import HomeEventCard from './HomeEventCard.astro';
+interface Props { entries: CollectionEntry<'events'>[]; count?: number; }
+const { entries, count = 3 } = Astro.props;
+const payload = {
+  events: entries.map(({ data }) => ({ ...data, href: `/events/${data.slug}/` })),
+  countdown: pages.home.events.countdown, count, homeEmpty: site.ui.empty.events,
+};
+---
+<div data-event-browser>
+  <script type="application/json" data-event-data set:html={jsonForHtml(payload)} />
+  <div class="home-event-grid" data-event-list hidden>
+    {entries.map((entry) => <HomeEventCard entry={entry} />)}
+    <p class="empty" data-list-empty hidden={entries.length > 0}>{site.ui.empty.events}</p>
+  </div>
+  <p data-browser-fallback>{site.ui.event.homeWithoutJavaScript}</p>
+</div>
+<script src="../scripts/event-browser.ts"></script>

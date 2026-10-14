@@ -1,0 +1,6 @@
+---
+import Icon from './Icon.astro';
+interface Props { name: 'email' | 'telegram' | 'instagram' | 'linkedin'; }
+const { name } = Astro.props;
+---
+<Icon name={name} class="contact-icon" />

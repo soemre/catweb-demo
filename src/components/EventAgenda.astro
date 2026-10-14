@@ -1,0 +1,29 @@
+---
+import type { PublicEvent } from '../lib/events';
+import { formatAgendaDate, formatEventRange, groupEventsByDay } from '../lib/event-agenda';
+import { pages, site } from '../lib/content';
+interface Props { events: PublicEvent[]; }
+const { events } = Astro.props;
+const groups = groupEventsByDay(events), settings = pages.events;
+---
+<aside class="event-agenda-panel" id="event-agenda" data-event-agenda aria-labelledby="event-agenda-heading">
+  <div class="event-agenda-toolbar">
+    <h2 id="event-agenda-heading">{settings.controls.agenda}</h2>
+    <a class="agenda-back-calendar" href="#event-calendar" data-back-calendar hidden>{settings.controls.backCalendar}</a>
+  </div>
+  <div class="event-agenda-scroll" data-agenda-scroll tabindex="-1">
+    {groups.map(({ day, events: entries }) => <section class="event-agenda-day" id={`agenda-day-${day}`} data-agenda-day={day} aria-labelledby={`agenda-heading-${day}`}>
+      <h3 id={`agenda-heading-${day}`} tabindex="-1"><time datetime={day}>{formatAgendaDate(day, site.dateLocale)}</time></h3>
+      <ul>
+        {entries.map((event) => <li class="event-agenda-row" data-agenda-event={event.slug}>
+          <div class="event-agenda-info">
+            <a href={event.href}>{event.title}</a>
+            <p class="event-agenda-time">{formatEventRange(event, site.dateLocale)}</p>
+          </div>
+          <span class="calendar-event-state" data-agenda-status={event.slug}>{event.cancelled ? site.ui.event.cancelled : ''}</span>
+        </li>)}
+      </ul>
+    </section>)}
+    <p class="empty" data-agenda-empty hidden={events.length > 0}>{settings.empty.all}</p>
+  </div>
+</aside>

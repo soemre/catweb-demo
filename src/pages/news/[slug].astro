@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getNews } from '../../lib/content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import NewsWorkspace from '../../components/NewsWorkspace.astro';
+export async function getStaticPaths() { return (await getNews()).map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } })); }
+interface Props { entry: CollectionEntry<'news'>; }
+const { entry } = Astro.props, post = entry.data;
+const milestone = post.category === 'milestone';
+const entries = await getNews();
+---
+<SiteLayout title={post.title} description={post.summary} image={post.image} seo={post.seo} currentSection={milestone ? 'milestones' : 'news'} wide>
+  <NewsWorkspace entries={entries} selected={entry} detail />
+</SiteLayout>

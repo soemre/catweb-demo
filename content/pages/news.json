@@ -1,0 +1,8 @@
+{
+  "title": "News & Articles", "headline": "News & Articles",
+  "seo": { "title": "News & articles from our queer community | Collettivo Alan Turing", "description": "News, articles and announcements from Collettivo Alan Turing, the LGBTQ+ and queer student community at Politecnico di Torino (PoliTO).", "image": "" },
+  "intro": "",
+  "listingHeading": "All posts",
+  "categories": { "news": "News", "article": "Article", "announcement": "Announcement", "milestone": "Milestone" },
+  "controls": { "previousPhoto": "Previous photo", "nextPhoto": "Next photo", "photoPosition": "Photo {current} of {total}", "loading": "Loading article…", "loaded": "Now reading: {title}" }
+}

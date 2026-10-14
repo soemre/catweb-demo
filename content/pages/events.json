@@ -1,0 +1,7 @@
+{
+  "title": "Events", "headline": "Events",
+  "seo": { "title": "LGBTQ+ events at PoliTO | Collettivo Alan Turing", "description": "Browse upcoming and past Collettivo Alan Turing events. Meet people and explore LGBTQ+ and queer community life at Politecnico di Torino (PoliTO).", "image": "" },
+  "intro": "",
+  "controls": { "agenda": "All events", "backCalendar": "Back to calendar", "previous": "Previous month", "next": "Next month", "today": "Today", "month": "Calendar month", "selectDay": "Show events for {date}", "moreEvents": "Show {count} more", "selectedDay": "Events for {date}: {count}" },
+  "empty": { "all": "There are no events listed yet. Get in touch if you’d like to know more about the Collettivo.", "month": "No events this month. Browse another month or explore the agenda.", "day": "No events on this day." }
+}

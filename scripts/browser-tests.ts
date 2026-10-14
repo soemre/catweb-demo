@@ -1,0 +1,138 @@
+import { cp, mkdir, readFile, writeFile, symlink, rm, access } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import assert from 'node:assert/strict';
+import { stringify } from 'yaml';
+import { eventFixture, otherEvents, stackedEvents, milestoneFixtures, newsFixtures } from '../tests/fixtures/content.ts';
+
+await access('dist/index.html').catch(() => { throw new Error('Run npm run build before npm run test:e2e.'); });
+const root = resolve('.test-site');
+await rm(root, { recursive: true, force: true });
+await mkdir(root);
+for (const path of ['src', 'content', 'public', 'scripts', 'package.json', 'tsconfig.json', 'astro.config.mjs', '.pages.yml']) await cp(path, `${root}/${path}`, { recursive: true });
+await rm(`${root}/content/pages/demo-home-hero.demo.json`, { force: true });
+// Fixtures must remain deterministic when editors publish real entries through CMS.
+for (const collection of ['events', 'news', 'resources', 'areas', 'achievements', 'supporters']) {
+  await rm(`${root}/content/${collection}`, { recursive: true, force: true });
+  await mkdir(`${root}/content/${collection}`);
+}
+await symlink(resolve('node_modules'), `${root}/node_modules`, 'dir');
+await mkdir(`${root}/src/pages/timeline-samples`, { recursive: true });
+await cp('tests/fixtures/timeline-samples.astro.txt', `${root}/src/pages/timeline-samples/[count].astro`);
+await mkdir(`${root}/src/pages/empty-browsers`, { recursive: true });
+await cp('tests/fixtures/empty-browsers.astro.txt', `${root}/src/pages/empty-browsers/[kind].astro`);
+await mkdir(`${root}/src/pages/home-samples`, { recursive: true });
+await cp('tests/fixtures/home-samples.astro.txt', `${root}/src/pages/home-samples/[kind].astro`);
+const json = (path: string, value: unknown) => writeFile(`${root}/${path}`, JSON.stringify(value, null, 2));
+const markdown = (data: Record<string, unknown>, body = 'Full fixture post.\n\n![Test upload](/media/fixture.svg)') => `---\n${stringify(data)}---\n${body}\n`;
+const post = (collection: string, data: Record<string, unknown>, body?: string) => writeFile(`${root}/content/${collection}/${data.slug}.md`, markdown(data, body));
+for (const [index, name] of ['Organisation', 'Awareness', 'Communication', 'Community'].entries()) await json(`content/areas/${name.toLowerCase()}.json`, { name, description: '', contribute: '', order: index + 1, visible: true });
+await json('content/achievements/confirmed-fixture.json', { text: 'Fixture confirmed work.', order: 1, published: true, verification: 'confirmed' });
+await cp('tests/fixtures/media.svg', `${root}/public/media/fixture.svg`);
+await cp('tests/fixtures/sticker.svg', `${root}/public/media/sticker.svg`);
+await cp('tests/fixtures/photo.svg', `${root}/public/media/photo.svg`);
+await writeFile(`${root}/public/media/fixture.txt`, 'Test-only downloadable material.');
+await post('events', eventFixture);
+for (const entry of otherEvents) await post('events', entry.slug === 'cancelled' ? { ...entry, image: '/media/fixture.svg', imageAlt: 'Test cover used as a sticker fallback' } : entry);
+for (const entry of stackedEvents) await post('events', entry);
+await post('events', { title: 'Secret draft event', slug: 'secret-draft', status: 'draft' }, '[Explain this before publishing.]');
+for (const entry of newsFixtures) await post('news', entry, `## Story ${entry.slug}\n\nFull article body for ${entry.title}.\n\n${'A longer paragraph about this community gathering and the people sharing their ideas.\n\n'.repeat(12)}`);
+await post('news', { title: 'Secret draft news', slug: 'secret-draft', status: 'draft' });
+for (const entry of [...milestoneFixtures].reverse()) await post('news', entry);
+await post('news', { title: 'Secret draft milestone', slug: 'secret-milestone', status: 'draft', category: 'milestone' });
+await post('resources', { title: 'Fixture guide', slug: 'fixture-guide', status: 'published', summary: 'A rendering fixture, not public advice.', kind: 'guide', order: 2, checked: '2026-10-01', provider: 'Test provider', image: '/media/fixture.svg', imageAlt: 'Test resource cover', url: 'https://example.org/official' }, '## Fixture guide heading\n\nTest-only guide body.');
+await post('resources', { title: 'Fixture external resource', slug: 'fixture-external', status: 'published', summary: 'Test external destination.', kind: 'external', order: 1, url: 'https://example.org/resource', checked: '2026-10-01', provider: 'Test external provider' }, 'Test-only additional description.');
+await post('resources', { title: 'Fixture file', slug: 'fixture-file', status: 'published', summary: 'Test download.', kind: 'file', order: 3, file: '/media/fixture.txt' }, 'Test-only file instructions.');
+await post('resources', { title: 'Fixture preview guide', slug: 'fixture-preview-guide', status: 'preview', summary: 'Approved preview summary.', kind: 'guide', order: 4, editorNotes: 'Private preview editorial notes.' }, '[Explain this unfinished private preview body.]');
+await post('resources', { title: 'Fixture preview external', slug: 'fixture-preview-external', status: 'preview', summary: 'Approved external preview summary.', kind: 'external', order: 5, url: 'https://example.org/preview', provider: 'Test preview provider', checked: '2026-10-02', editorNotes: 'Private preview editorial notes.' }, '[Explain this unfinished private external body.]');
+await post('resources', { title: 'Secret draft guide', slug: 'secret-draft', status: 'draft' });
+await json('content/achievements/unverified-fixture.json', { text: 'Secret unverified milestone', order: 0, published: true, verification: 'pending', editorNotes: '[Confirm first.]' });
+await json('content/areas/hidden-fixture.json', { name: 'Secret hidden Area', order: 0, visible: false });
+await json('content/supporters/fixture.json', { name: 'Fixture supporter', website: 'https://example.org/', logo: '/media/fixture.svg', logoAlt: 'Fixture supporter logo', relationship: 'Only a testing fixture.', order: 1, visible: true });
+for (let index = 2; index <= 4; index++) await json(`content/supporters/fixture-${index}.json`, { name: `Fixture supporter ${index}`, website: index === 3 ? '/contact/' : '/join/', logo: index === 2 ? '/media/photo.svg' : index === 3 ? '/media/sticker.svg' : '/media/fixture.svg', logoAlt: index === 3 ? '' : `Supporter image ${index}`, relationship: 'This relationship prose must not appear on Home.', order: index, visible: true });
+await json('content/supporters/hidden-fixture.json', { name: 'Secret hidden supporter', website: '/join/', logo: '/media/fixture.svg', order: 0, visible: false });
+await json('content/supporters/no-image-fixture.json', { name: 'Fixture without an image', website: '/join/', order: 0, visible: true });
+const settings = JSON.parse(await readFile(`${root}/content/site.json`, 'utf8'));
+const configuredLogo = settings.logo;
+settings.logo = '';
+const configuredLogoDark = settings.logoDark;
+settings.logoDark = '';
+await json('content/site.json', settings);
+const join = JSON.parse(await readFile(`${root}/content/pages/join.json`, 'utf8'));
+join.membership.formUrl = '';
+await json('content/pages/join.json', join);
+const home = JSON.parse(await readFile(`${root}/content/pages/home.json`, 'utf8'));
+home.hero = { enabled: true, image: '', alt: '', focusX: 50, focusY: 50 };
+home.news.count = 2;
+await json('content/pages/home.json', home);
+function build(analyticsMode = 'dashboard', analyticsToken = '') {
+  const result = spawnSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit', env: { ...process.env, PUBLIC_ANALYTICS_MODE: analyticsMode, PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN: analyticsToken } });
+  if (result.status !== 0) throw new Error('Isolated content fixture build failed');
+}
+build('manual', '00000000000000000000000000000001'); // Test-only public-token shape, never contacted.
+const baseline = await readFile(`${root}/dist/index.html`, 'utf8');
+assert.doesNotMatch(baseline, /data-home-hero[\s=>]/);
+const baselineNews = baseline.match(/<ol[^>]*data-home-news-list[^>]*>([\s\S]*?)<\/ol>/)?.[1] ?? '';
+assert.equal((baselineNews.match(/<li>/g) ?? []).length, 2);
+const baselineMilestones = await readFile(`${root}/dist/milestones/index.html`, 'utf8');
+assert.ok(baselineMilestones.indexOf('data-milestone="fixture-milestone-1"') < baselineMilestones.indexOf('data-milestone="fixture-milestone-8"'));
+assert.doesNotMatch(baselineMilestones, /Secret draft|Test-only milestone body/);
+assert.match(baseline, /Original fixture event/);
+assert.match(baseline, /class="brand-name"/);
+assert.doesNotMatch(baseline, /class="brand-logo\b/);
+assert.equal((baseline.match(/data-analytics-loader/g) ?? []).length, 1);
+assert.ok((await readFile(`${root}/dist/join/index.html`, 'utf8')).includes(join.membership.emailLabel));
+// A second build verifies real editorial mutations and stable URLs, not just initial loading.
+settings.logo = configuredLogo;
+settings.logoDark = configuredLogoDark;
+await json('content/site.json', settings);
+// Editorial counts and image destinations are checked across the two builds too.
+const baselineSupporters = await readFile(`${root}/dist/index.html`, 'utf8');
+assert.match(baselineSupporters, /href="https:\/\/example.org\/"/);
+assert.doesNotMatch(baselineSupporters, /This relationship prose must not appear on Home/);
+home.headline = 'CMS-edited Home headline';
+home.seo.description = 'CMS-edited search description';
+home.news.count = 5;
+home.hero = { enabled: true, image: '/media/fixture.svg', alt: 'CMS-edited Home opening photo', focusX: 35, focusY: 60 };
+await json('content/pages/home.json', home);
+await json('content/supporters/fixture.json', { name: 'Fixture supporter', website: '/join/', logo: '/media/photo.svg', logoAlt: 'CMS-edited supporter photo', relationship: 'Only a testing fixture.', order: 1, visible: true });
+await json('content/areas/new-fixture.json', { name: 'New CMS Area', description: 'An editable fixture description.', contribute: '', order: 0, visible: true });
+const organisation = JSON.parse(await readFile(`${root}/content/areas/organisation.json`, 'utf8'));
+organisation.order = 9;
+await json('content/areas/organisation.json', organisation);
+await post('events', { ...eventFixture, title: 'Shared edited event', summary: 'Shared edited summary' });
+await post('news', { ...milestoneFixtures[7], title: 'CMS-edited milestone story', milestoneDate: '2026-09-10' }, '## Test-only milestone body\n\nThe full story behind the fixture milestone.');
+join.membership.formUrl = 'https://docs.google.com/forms/d/e/test-form/viewform';
+await json('content/pages/join.json', join);
+build();
+const editedHome = await readFile(`${root}/dist/index.html`, 'utf8');
+assert.match(editedHome, /data-home-hero/);
+assert.match(editedHome, /CMS-edited Home opening photo/);
+const milestonesHtml = await readFile(`${root}/dist/milestones/index.html`, 'utf8');
+assert.ok(milestonesHtml.indexOf('data-milestone="fixture-milestone-8"') < milestonesHtml.indexOf('data-milestone="fixture-milestone-1"'));
+assert.match(milestonesHtml, /CMS-edited milestone story/);
+assert.doesNotMatch(milestonesHtml, /Secret draft|Test-only milestone body|A test-only milestone story/);
+const milestoneArticle = await readFile(`${root}/dist/news/fixture-milestone-8/index.html`, 'utf8');
+assert.match(milestoneArticle, /CMS-edited milestone story|Test-only milestone body/);
+await assert.rejects(access(`${root}/dist/news/secret-milestone/index.html`));
+for (const path of ['index.html', 'events/index.html', 'events/shared-event/index.html']) {
+  const html = await readFile(`${root}/dist/${path}`, 'utf8');
+  assert.match(html, /Shared edited event/);
+  assert.doesNotMatch(html, /Original fixture event|Secret draft/);
+  assert.doesNotMatch(html, /data-analytics-loader/); // Dashboard mode does not inject a duplicate beacon.
+}
+const resourcesHtml = await readFile(`${root}/dist/resources/index.html`, 'utf8');
+assert.match(resourcesHtml, /Approved preview summary|Approved external preview summary/);
+assert.doesNotMatch(resourcesHtml, /unfinished private|Private preview editorial notes|Secret draft/);
+assert.doesNotMatch(resourcesHtml, /Test provider|Test external provider|Test preview provider|Test-only additional description|Test-only guide body|Test-only file instructions/);
+const previewHtml = await readFile(`${root}/dist/resources/fixture-preview-guide/index.html`, 'utf8');
+assert.match(previewHtml, /Approved preview summary/);
+assert.ok(previewHtml.includes(settings.ui.resource.preview));
+assert.doesNotMatch(previewHtml, /unfinished private|Private preview editorial notes/);
+const externalPreviewHtml = await readFile(`${root}/dist/resources/fixture-preview-external/index.html`, 'utf8');
+assert.match(externalPreviewHtml, /Approved external preview summary|https:\/\/example.org\/preview/);
+assert.doesNotMatch(externalPreviewHtml, /unfinished private|Private preview editorial notes/);
+for (const slug of ['fixture-external', 'fixture-file']) await access(`${root}/dist/resources/${slug}/index.html`);
+await assert.rejects(access(`${root}/dist/resources/secret-draft/index.html`));
+const result = spawnSync(process.execPath, ['node_modules/@playwright/test/cli.js', 'test'], { stdio: 'inherit' });
+process.exitCode = result.status ?? 1;

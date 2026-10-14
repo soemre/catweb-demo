@@ -1,0 +1,118 @@
+---
+import '../styles/global.css';
+import { site } from '../lib/content';
+import RichText from '../components/RichText.astro';
+import SiteBrand from '../components/SiteBrand.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import EmailLink from '../components/EmailLink.astro';
+import Icon from '../components/Icon.astro';
+import { analyticsConfig } from '../lib/analytics';
+import { plainText, structuredData, jsonForHtml } from '../lib/seo';
+interface Props { title: string; description?: string; image?: string; seo?: { title?: string; description?: string; image?: string }; noindex?: boolean; currentSection?: keyof typeof site.navigation; wide?: boolean; }
+const { title, description = site.description, image = '', seo, noindex = false, currentSection, wide = false } = Astro.props;
+const fullTitle = `${title} · ${site.name}`;
+const sharingTitle = seo?.title || fullTitle;
+const metaDescription = plainText(seo?.description || description).slice(0, 180);
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const sharingImage = seo?.image || image || site.shareImage;
+const analytics = analyticsConfig(import.meta.env.PUBLIC_ANALYTICS_MODE || 'dashboard', import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN || '');
+const analyticsHostname = Astro.site!.hostname;
+const fullWidthSlot = Astro.slots.has('full-width') || Astro.slots.has('opening');
+const navKeys = ['home', 'events', 'milestones', 'news', 'resources', 'contact'] as const;
+const isCurrent = (destination: string) => {
+  const url = new URL(destination, Astro.site);
+  return url.origin === Astro.site!.origin && (Astro.url.pathname === url.pathname || (url.pathname !== '/' && Astro.url.pathname.startsWith(url.pathname)));
+};
+---
+<!doctype html>
+<html lang="en" data-default-theme={site.ui.theme.default} data-theme={site.ui.theme.default === 'system' ? undefined : site.ui.theme.default}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="preload" href="/fonts/ApfelGrotezk-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ApfelGrotezk-Mittel.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ApfelGrotezk-Fett.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      // Runs before CSS paints; storage can be unavailable in private/restricted browsers.
+      (() => {
+        const root = document.documentElement;
+        let preference = root.dataset.defaultTheme || 'system';
+        try { const saved = localStorage.getItem('cat-theme'); if (['light', 'dark', 'system'].includes(saved)) preference = saved; } catch {}
+        root.dataset.theme = preference === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : preference;
+        root.dataset.themePreference = preference;
+      })();
+    </script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={sharingTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content={sharingImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={sharingTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    {sharingImage && <><meta property="og:image" content={new URL(sharingImage, Astro.site).href} /><meta name="twitter:image" content={new URL(sharingImage, Astro.site).href} /></>}
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && <script is:inline type="application/ld+json" data-site-structured-data set:html={jsonForHtml(structuredData(site, Astro.site!.href, canonical, fullTitle, metaDescription))} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{site.ui.skip}</a>
+    <header class="site-header" data-site-header>
+      <div class="topbar">
+        <SiteBrand />
+        <nav id="site-navigation" class="primary-nav" data-site-navigation aria-label={site.ui.navigation}>
+          <ul>{navKeys.map((key) => { const item = site.navigation[key]; return <li><a href={item.url} aria-current={(currentSection ? currentSection === key : isCurrent(item.url)) ? 'page' : undefined}>{item.label}</a></li>; })}</ul>
+        </nav>
+        <div class="header-actions">
+          <div class="theme-control" role="group" aria-label={site.ui.theme.label} data-theme-control data-light-label={site.ui.theme.light} data-dark-label={site.ui.theme.dark} data-toggle-label={site.ui.theme.toggleLabel} hidden>
+            <button type="button" class="theme-toggle" data-theme-toggle role="switch" aria-label={site.ui.theme.dark} aria-checked="false">
+              <Icon name="sun" class="theme-icon theme-sun" />
+              <Icon name="moon" class="theme-icon theme-moon" />
+            </button>
+          </div>
+          <a class="button header-join" data-join-cta href={site.navigation.join.url} aria-current={isCurrent(site.navigation.join.url) ? 'page' : undefined}>{site.navigation.join.label}</a>
+          <button class="menu-toggle" type="button" data-menu-toggle aria-controls="site-navigation" aria-expanded="false" hidden>
+            <span class="sr-only">{site.ui.menu}</span>
+            <Icon name="menu" class="menu-open" />
+            <Icon name="close" class="menu-close" />
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class:list={fullWidthSlot ? [] : ['shell', { 'shell-wide': wide }]} tabindex="-1">
+      <slot name="opening" />
+      {fullWidthSlot ? <div class:list={['shell', { 'shell-wide': wide }]}><slot /></div> : <slot />}
+      <slot name="full-width" />
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand"><SiteBrand /><RichText text={site.footer.copy} /></div>
+          <div class="footer-contact">
+            <div class="footer-contact-row" data-footer-contact-row>
+              <EmailLink class="footer-email contact-email" />
+              <SocialLinks />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="../scripts/theme.ts"></script>
+    <script src="../scripts/navigation.ts"></script>
+    {import.meta.env.PROD && analytics.mode === 'manual' && <script is:inline data-analytics-loader define:vars={{ analyticsToken: analytics.token, analyticsHostname }}>
+      // Only the configured production hostname collects data; previews/local checks do not.
+      if (location.hostname === analyticsHostname) {
+        const beacon = document.createElement('script');
+        beacon.type = 'module';
+        beacon.defer = true;
+        beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        beacon.dataset.cfBeacon = JSON.stringify({ token: analyticsToken });
+        document.body.append(beacon);
+      }
+    </script>}
+  </body>
+</html>

@@ -1,0 +1,9 @@
+---
+import RichText from './RichText.astro';
+interface Props { headline: string; intro?: string; }
+const { headline, intro } = Astro.props;
+---
+<header class="page-heading">
+  <h1>{headline}</h1>
+  <RichText text={intro} />
+</header>

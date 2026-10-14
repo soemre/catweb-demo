@@ -1,0 +1,40 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import EventBrowser from '../../components/EventBrowser.astro';
+import NewsList from '../../components/NewsList.astro';
+import SupporterStrip from '../../components/SupporterStrip.astro';
+import HomeHero from '../../components/HomeHero.astro';
+import { homeHeroSchema } from '../../lib/schemas';
+import { getCollection } from 'astro:content';
+import { getEvents, getNews, pages } from '../../lib/content';
+import { selectSupporterImages } from '../../lib/supporters';
+export function getStaticPaths() { return ['countdown', 'few', 'empty', 'hidden', 'single', 'hero', 'hero-empty', 'hero-disabled'].map((kind) => ({ params: { kind }, props: { kind } })); }
+interface Props { kind: string; }
+const { kind } = Astro.props;
+const hero = homeHeroSchema.parse({ enabled: kind === 'hero' || kind === 'hero-empty', image: kind === 'hero' || kind === 'hero-disabled' ? '/media/photo.svg' : '', alt: 'Fixture opening photograph with a purple creative scene.', focusX: 80, focusY: 25 });
+const heroActive = hero.enabled && Boolean(hero.image);
+const base = Date.parse('2026-10-12T09:59:59Z');
+const originals = await getEvents();
+const slots = [
+  ['shared-event', 1000], ['older', 61000], ['recent-past', 3601000], ['future-dst', 100 * 86400000 + 1000],
+] as const;
+const candidates = slots.map(([slug, delay], index) => {
+  const entry = originals.find(({ data }) => data.slug === slug)!;
+  return { ...entry, data: { ...entry.data, title: `Countdown event ${index + 1}`, summary: 'A test-only countdown card.', cancelled: false, registrationRequired: false, start: new Date(base + delay).toISOString(), end: new Date(base + delay + 3600000).toISOString() } };
+});
+const excluded = originals.filter(({ data }) => ['cancelled', 'overnight'].includes(data.slug));
+const events = kind === 'empty' ? [] : kind === 'few' ? candidates.slice(0, 1) : [candidates[1], candidates[3], candidates[0], candidates[2], ...excluded];
+const eventCount = ['hidden', 'single'].includes(kind) ? 0 : kind === 'few' ? 1 : 3;
+const newsCount = ['hidden', 'single'].includes(kind) ? 0 : kind === 'few' ? 2 : 5;
+const news = kind === 'empty' ? [] : (await getNews()).slice(0, newsCount);
+const eligible = selectSupporterImages(await getCollection('supporters'));
+const supporters = ['empty', 'hidden'].includes(kind) ? [] : kind === 'single' ? eligible.slice(0, 1) : eligible;
+---
+<SiteLayout title="Home layout fixture" currentSection="home">
+  <HomeHero hero={hero} headline="Home layout fixture" safeSpace="A safe space to arrive and take part." slot="opening" />
+  {!heroActive && <h1>Home layout fixture</h1>}
+  {kind.startsWith('hero') && <div data-home-introduction><p>The opening content overlaps the photograph and then continues naturally into the page.</p><p>A longer introduction follows, with enough room to describe the community and the ways people can join.</p></div>}
+  {eventCount > 0 && <section data-home-events><h2>{pages.home.events.heading}</h2><EventBrowser entries={events} count={eventCount} /><p><a href="/events/" data-home-events-action>All events</a></p></section>}
+  {newsCount > 0 && <section data-home-news><h2>{pages.home.news.heading}</h2><NewsList entries={news} home /></section>}
+  <SupporterStrip entries={supporters} slot="full-width" />
+</SiteLayout>

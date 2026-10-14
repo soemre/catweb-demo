@@ -1,0 +1,9 @@
+---
+import { pages, getNews } from '../../lib/content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import NewsWorkspace from '../../components/NewsWorkspace.astro';
+const page = pages.news, entries = await getNews();
+---
+<SiteLayout title={page.title} description={page.intro} seo={page.seo} wide>
+  <NewsWorkspace entries={entries} />
+</SiteLayout>

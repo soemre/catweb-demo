@@ -1,0 +1,17 @@
+{
+  "title": "Join Us", "headline": "What can you do?",
+  "seo": { "title": "Join our LGBTQ+ community at PoliTO | Collettivo Alan Turing", "description": "Get to know Collettivo Alan Turing and help build a safer LGBTQ+ and queer community at Politecnico di Torino (PoliTO). Choose an Area now or later.", "image": "" },
+  "intro": "The sky’s the limit. Here are some of the things our members have made possible, and some of the things we’re working on:",
+  "ideas": "Every one of these started with an idea. They move forward because people believe in them, speak up, support one another and take the steps to bring them to life.\n\nProposing ideas, developing them together and bringing them to life are all ways to shape what we do next.",
+  "growth": { "heading": "Develop yourself while helping others", "body": "We try to give you the space to develop yourself while helping others.\n\nAnd we’re here to do it together. Through internal events, meetings and everyday conversations, we share what we know, learn from one another and work towards the future we want to live in." },
+  "areas": { "heading": "Our Internal Areas", "intro": "Our Internal Areas bring people together around different parts of the Collettivo’s work. Find out what each Area does and where you’d like to contribute.", "choice": "You can choose an Area when you join or decide later. Both options are welcome." },
+  "membership": {
+    "heading": "Ready to join us?", "intro": "You can come to one of our public events to get to know us.",
+    "information": "", "formUrl": "", "formLabel": "Fill in the membership form",
+    "events": { "label": "See upcoming events", "url": "/events/?focus=upcoming" },
+    "emailLabel": "Email us about joining", "questions": "Questions about joining?",
+    "contact": { "label": "Get in touch", "url": "/contact/" },
+    "eligibility": "", "eligibilityLabel": "Eligibility", "fee": "", "feeLabel": "Membership fee",
+    "duration": "", "durationLabel": "Membership duration", "approval": "", "approvalLabel": "Joining process"
+  }
+}

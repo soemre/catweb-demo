@@ -1,0 +1,18 @@
+---
+import { getResources, pages, site } from '../../lib/content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import RichText from '../../components/RichText.astro';
+import Icon from '../../components/Icon.astro';
+const page = pages.resources, resources = await getResources();
+---
+<SiteLayout title={page.title} description={page.intro} seo={page.seo}>
+  <PageHeader headline={page.headline} intro={page.intro} />
+  <RichText text={page.invitation} />
+  <div class="resource-list" data-resource-list>
+      {resources.length ? resources.map(({ data }) => <article class="resource-entry" data-resource data-resource-status={data.status}>
+        <h2><a class="resource-link" href={`/resources/${data.slug}/`}><span>{data.title}</span><Icon name="caret-right" /></a></h2>
+        <p>{data.summary}</p>
+      </article>) : <p class="empty">{site.ui.empty.resources}</p>}
+  </div>
+</SiteLayout>

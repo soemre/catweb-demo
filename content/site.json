@@ -1,0 +1,56 @@
+{
+  "name": "Collettivo Alan Turing",
+  "logo": "/media/collettivo-alan-turing.svg",
+  "logoDark": "/media/collettivo-alan-turing-dark.svg",
+  "logoAlt": "",
+  "description": "An LGBTQ+ organisation and queer student community at Politecnico di Torino (PoliTO) in Turin. A safe space for every student who needs one.",
+  "shareImage": "",
+  "dateLocale": "en-GB",
+  "contact": {
+    "email": "direzione@collettivoalanturing.it",
+    "office": "Corso Duca degli Abruzzi, 29, 10129 Torino, Italy",
+    "fiscalCode": "97898000019",
+    "telegram": "https://tr.ee/zmQ9ZKx2S2",
+    "instagram": "https://www.instagram.com/collettivoalanturing/",
+    "linkedin": "https://www.linkedin.com/company/collettivo-alan-turing"
+  },
+  "navigation": {
+    "home": { "label": "Home", "url": "/" },
+    "join": { "label": "Join Us", "url": "/join/" },
+    "events": { "label": "Events", "url": "/events/" },
+    "milestones": { "label": "Milestones", "url": "/milestones/" },
+    "news": { "label": "News & Articles", "url": "/news/" },
+    "resources": { "label": "Support & Resources", "url": "/resources/" },
+    "contact": { "label": "Contact", "url": "/contact/" }
+  },
+  "footer": { "copy": "A safe space for every student who needs one." },
+  "ui": {
+    "skip": "Skip to content",
+    "navigation": "Main navigation",
+    "menu": "Menu",
+    "theme": { "label": "Theme", "light": "Light", "dark": "Dark", "toggleLabel": "Switch to {theme} mode", "default": "system" },
+    "event": {
+      "upcoming": "Upcoming", "happening": "Happening now", "past": "Past",
+      "cancelled": "Event cancelled", "ended": "Event ended", "closed": "Registration closed",
+      "opens": "Registration opens {date}",
+      "noRegistration": "No registration required.",
+      "checkWithJavaScript": "Enable JavaScript to check the current registration window. The dates and deadlines are listed below.",
+      "homeWithoutJavaScript": "Browse all events for dates and full details.",
+      "browserWithoutJavaScript": "The interactive calendar needs JavaScript. All event dates and post links are available in the agenda.",
+      "start": "Starts", "end": "Ends", "location": "Location", "venueLink": "Venue / online link",
+      "audience": "Who can attend", "language": "Event language", "cost": "Cost", "accessibility": "Accessibility",
+      "registration": "Registration", "opening": "Registration opens", "closing": "Registration closes",
+      "recap": "Recap", "gallery": "Photos", "materials": "Materials"
+    },
+    "post": { "backHome": "Return to Home", "backEvents": "Return to Events", "backNews": "Return to News & Articles", "backMilestones": "Return to Milestones", "backResources": "Return to Support & Resources", "publishedOn": "Published", "milestoneDate": "Milestone date", "author": "By" },
+    "resource": { "guide": "Read guide", "external": "External resource", "official": "Read official information", "file": "Download file", "provider": "Provided by", "checked": "Last checked", "preview": "The full guide is coming soon." },
+    "empty": {
+      "events": "There are no upcoming events to show right now. You can browse all events or get in touch.",
+      "news": "We haven’t published any news or articles here yet.",
+      "resources": "We’re preparing resources to share here. If you need a hand, get in touch.",
+      "supporters": "Supporting organisations will be listed here.",
+      "achievements": "More about our work will be shared here soon."
+    },
+    "notFound": { "title": "Page not found", "body": "We couldn’t find this page. Use the navigation or return to Home.", "action": { "label": "Back to Home", "url": "/" } }
+  }
+}

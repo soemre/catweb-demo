@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages } from '../lib/content';
+import { selectSupporterImages } from '../lib/supporters';
+interface Props { entries: CollectionEntry<'supporters'>[]; }
+const { entries } = Astro.props, supporters = selectSupporterImages(entries);
+const labels = pages.home.supporters;
+---
+{supporters.length > 0 && <section class="supporter-strip" data-supporter-strip aria-label={labels.heading}>
+  <div class="supporter-viewport" id="supporter-images" data-supporter-viewport>
+    <div class="supporter-track" data-supporter-track>
+      <ul class="supporter-group" data-supporter-original>
+        {supporters.map(({ id, data }) => <li data-supporter={id}>
+          <a class="supporter-image-link" href={data.website} aria-label={data.name}>
+            <img src={data.logo} alt={data.logoAlt?.trim() || data.name} loading="lazy" decoding="async" />
+          </a>
+        </li>)}
+      </ul>
+    </div>
+  </div>
+</section>}
+<script src="../scripts/supporter-strip.ts"></script>

@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages, site } from '../lib/content';
+import { jsonForHtml } from '../lib/seo';
+import EventAgenda from './EventAgenda.astro';
+import Icon from './Icon.astro';
+interface Props { entries: CollectionEntry<'events'>[]; }
+const { entries } = Astro.props, settings = pages.events;
+const events = entries.map(({ data }) => ({ ...data, href: `/events/${data.slug}/` }));
+const payload = { events, settings, labels: site.ui.event, locale: site.dateLocale };
+---
+<div class="events-workspace" data-event-workspace data-event-ready="false">
+  <h1 class="sr-only">{settings.headline}</h1>
+  <script type="application/json" data-event-data set:html={jsonForHtml(payload)} />
+  <div class="event-calendar-panel" id="event-calendar" data-event-calendar aria-labelledby="event-month-heading" hidden>
+    <div class="calendar-header" data-calendar-header>
+      <div class="calendar-controls">
+        <h2 id="event-month-heading" data-month-heading tabindex="-1" aria-live="polite"></h2>
+        <button class="month-arrow" type="button" data-month-previous aria-label={settings.controls.previous} title={settings.controls.previous}><Icon name="caret-left" /></button>
+        <button type="button" data-month-today>{settings.controls.today}</button>
+        <button class="month-arrow" type="button" data-month-next aria-label={settings.controls.next} title={settings.controls.next}><Icon name="caret-right" /></button>
+      </div>
+      <div class="calendar-weekdays" data-calendar-weekdays aria-hidden="true"></div>
+    </div>
+    <div class="calendar-grid-scroll" data-calendar-scroll>
+      <ol class="calendar-days" data-calendar-days aria-label={settings.controls.month}></ol>
+      <p class="empty" data-calendar-empty hidden>{settings.empty.month}</p>
+    </div>
+  </div>
+  <EventAgenda events={events} />
+  <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-calendar-selection></p>
+  <p data-browser-fallback>{site.ui.event.browserWithoutJavaScript}</p>
+</div>
+<script src="../scripts/event-workspace.ts"></script>

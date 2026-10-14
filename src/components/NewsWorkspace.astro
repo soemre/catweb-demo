@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { pages, site } from '../lib/content';
+import NewsArticle from './NewsArticle.astro';
+import NewsList from './NewsList.astro';
+interface Props { entries: CollectionEntry<'news'>[]; selected?: CollectionEntry<'news'>; detail?: boolean; }
+const { entries, selected = entries[0], detail = false } = Astro.props;
+const page = pages.news;
+---
+<div class="news-workspace" data-news-workspace data-news-detail={String(detail)} data-news-url={site.navigation.news.url} data-news-selected={selected ? `/news/${selected.data.slug}/` : ''} data-news-loading={page.controls.loading} data-news-loaded={page.controls.loaded}>
+  <div class="news-page-heading" data-news-page-heading>{!detail && <h1>{page.title}</h1>}</div>
+  <div class="news-reader" data-news-reader tabindex="-1">
+    {selected && <NewsArticle entry={selected} detail={detail} />}
+  </div>
+  <aside class="news-sidebar" aria-labelledby="news-list-heading" data-news-sidebar>
+    <h2 class="news-list-heading" id="news-list-heading">{page.listingHeading}</h2>
+    <NewsList entries={entries} selected={selected?.data.slug} current={detail ? 'page' : 'true'} />
+  </aside>
+  <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-news-status></p>
+</div>
+<script src="../scripts/news-reader.ts"></script>

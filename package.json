@@ -1,0 +1,37 @@
+{
+  "name": "collettivo-alan-turing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.20.0 <25"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "validate": "node scripts/validate-content.ts",
+    "check": "npm run validate && astro check",
+    "build": "npm run validate && astro build && node scripts/check-build.ts",
+    "preview": "astro preview",
+    "demo:seed": "node scripts/demo-content.ts seed",
+    "demo:clear": "node scripts/demo-content.ts clear",
+    "prepare:logo": "node scripts/prepare-logo.ts",
+    "test": "vitest run",
+    "test:e2e": "node scripts/browser-tests.ts"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "0.4.3",
+    "@astrojs/sitemap": "3.7.4",
+    "@phosphor-icons/core": "2.1.1",
+    "astro": "7.3.8",
+    "yaml": "^2.8.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@playwright/test": "1.64.0",
+    "@types/node": "^24.13.3",
+    "date-fns": "4.4.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}

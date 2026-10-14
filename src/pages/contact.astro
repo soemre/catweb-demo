@@ -1,0 +1,19 @@
+---
+import { site, pages } from '../lib/content';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import EmailLink from '../components/EmailLink.astro';
+const page = pages.contact;
+---
+<SiteLayout title={page.title} description={page.intro} seo={page.seo}>
+  <PageHeader headline={page.headline} intro={page.intro} />
+  <div class="contact-row" data-contact-row>
+    <EmailLink />
+    <SocialLinks />
+  </div>
+  <section class="contact-details"><h2>{page.detailsHeading}</h2><p>{site.name}</p><dl>
+    <dt>{page.labels.office}</dt><dd>{site.contact.office}</dd>
+    <dt>{page.labels.fiscalCode}</dt><dd>{site.contact.fiscalCode}</dd>
+  </dl></section>
+</SiteLayout>

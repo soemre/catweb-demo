@@ -1,0 +1,22 @@
+---
+import sun from '@phosphor-icons/core/assets/bold/sun-bold.svg?raw';
+import moon from '@phosphor-icons/core/assets/bold/moon-bold.svg?raw';
+import menu from '@phosphor-icons/core/assets/bold/list-bold.svg?raw';
+import close from '@phosphor-icons/core/assets/bold/x-bold.svg?raw';
+import calendar from '@phosphor-icons/core/assets/bold/calendar-blank-bold.svg?raw';
+import list from '@phosphor-icons/core/assets/bold/list-bullets-bold.svg?raw';
+import left from '@phosphor-icons/core/assets/bold/caret-left-bold.svg?raw';
+import right from '@phosphor-icons/core/assets/bold/caret-right-bold.svg?raw';
+import email from '@phosphor-icons/core/assets/bold/envelope-simple-bold.svg?raw';
+import telegram from '@phosphor-icons/core/assets/bold/telegram-logo-bold.svg?raw';
+import instagram from '@phosphor-icons/core/assets/bold/instagram-logo-bold.svg?raw';
+import linkedin from '@phosphor-icons/core/assets/bold/linkedin-logo-bold.svg?raw';
+
+const icons = { sun, moon, menu, close, calendar, list, 'caret-left': left, 'caret-right': right, email, telegram, instagram, linkedin };
+interface Props { name: keyof typeof icons; class?: string; }
+const { name, class: className } = Astro.props;
+// Trusted, build-time SVG assets. Only the selected icon paths reach the page.
+const svg = icons[name];
+const paths = svg.slice(svg.indexOf('>') + 1, svg.lastIndexOf('</svg>'));
+---
+<svg class:list={['icon', className]} viewBox="0 0 256 256" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false" data-icon={name} set:html={paths} />

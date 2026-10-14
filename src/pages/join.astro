@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import { pages, site } from '../lib/content';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import RichText from '../components/RichText.astro';
+const page = pages.join;
+const areas = (await getCollection('areas', ({ data }) => data.visible)).sort((a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id));
+const achievements = (await getCollection('achievements', ({ data }) => data.published && data.verification === 'confirmed')).sort((a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id));
+const membership = page.membership;
+---
+<SiteLayout title={page.title} description={page.intro} seo={page.seo}>
+  <section class="join-introduction">
+    <h1>{page.headline}</h1><RichText text={page.intro} />
+    {achievements.length ? <ul class="achievement-list">{achievements.map(({ data }) => <li><RichText text={data.text} /></li>)}</ul> : <p class="empty">{site.ui.empty.achievements}</p>}
+    <RichText text={page.ideas} />
+  </section>
+  <section><h2>{page.growth.heading}</h2><RichText text={page.growth.body} /></section>
+  <section data-areas>
+    <h2>{page.areas.heading}</h2><RichText text={page.areas.intro} /><RichText text={page.areas.choice} />
+    {areas.map(({ data }) => <article class="card" data-area><h3>{data.name}</h3><RichText text={data.description} /><RichText text={data.contribute} /></article>)}
+  </section>
+  <section>
+    <h2>{membership.heading}</h2><RichText text={membership.intro} /><RichText text={membership.information} />
+    {(['eligibility', 'fee', 'duration', 'approval'] as const).map((field) => membership[field] && <div><h3>{membership[`${field}Label`]}</h3><RichText text={membership[field]} /></div>)}
+    <div class="actions">
+      <a class="button" href={membership.events.url}>{membership.events.label}</a>
+      {membership.formUrl ? <a class="button" href={membership.formUrl}>{membership.formLabel}</a> : <a class="button" href={`mailto:${site.contact.email}`}>{membership.emailLabel}</a>}
+    </div>
+    <p>{membership.questions} <a href={membership.contact.url}>{membership.contact.label}</a></p>
+  </section>
+</SiteLayout>

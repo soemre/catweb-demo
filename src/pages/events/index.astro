@@ -1,0 +1,10 @@
+---
+import { pages, getEvents } from '../../lib/content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import EventWorkspace from '../../components/EventWorkspace.astro';
+const page = pages.events;
+const events = await getEvents();
+---
+<SiteLayout title={page.title} description={page.intro} seo={page.seo} wide>
+  <EventWorkspace entries={events} />
+</SiteLayout>

@@ -1,0 +1,22 @@
+---
+import { pages, site } from '../lib/content';
+import Icon from './Icon.astro';
+interface Props { photos: { image: string; alt: string; caption: string }[]; slug: string; }
+const { photos, slug } = Astro.props;
+const controls = pages.news.controls;
+const position = (index: number) => controls.photoPosition.replace('{current}', String(index + 1)).replace('{total}', String(photos.length));
+const trackId = `article-photos-${slug}`;
+---
+{photos.length > 0 && <div class="photo-header" data-photo-header role="region" aria-label={site.ui.event.gallery} data-position-label={controls.photoPosition}>
+  <div class="photo-track" data-photo-track id={trackId} tabindex={photos.length > 1 ? 0 : undefined}>
+    {photos.map((photo, index) => <figure class="photo-slide" data-photo-slide role="group" aria-label={position(index)}>
+      <img class="photo-header-image" src={photo.image} alt={photo.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+      {photo.caption && <figcaption>{photo.caption}</figcaption>}
+    </figure>)}
+  </div>
+  {photos.length > 1 && <div class="photo-controls" data-photo-controls hidden>
+    <button type="button" data-photo-previous aria-label={controls.previousPhoto} aria-controls={trackId}><Icon name="caret-left" /></button>
+    <span class="photo-position" data-photo-position aria-live="polite" aria-atomic="true">{position(0)}</span>
+    <button type="button" data-photo-next aria-label={controls.nextPhoto} aria-controls={trackId}><Icon name="caret-right" /></button>
+  </div>}
+</div>}

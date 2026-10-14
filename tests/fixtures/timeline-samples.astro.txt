@@ -1,0 +1,15 @@
+---
+import { getMilestones } from '../../lib/content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import MilestoneTimeline from '../../components/MilestoneTimeline.astro';
+export function getStaticPaths() {
+  return [0, 1, 2, 3, 4, 6, 7, 8].map((count) => ({ params: { count: String(count) }, props: { count } }));
+}
+interface Props { count: number; }
+const { count } = Astro.props;
+const entries = (await getMilestones()).slice(0, count);
+---
+<SiteLayout title="Timeline layout fixture">
+  <h1>Timeline layout fixture</h1>
+  <MilestoneTimeline entries={entries} />
+</SiteLayout>

@@ -1,0 +1,12 @@
+{
+  "title": "Home",
+  "headline": "A better tomorrow, together",
+  "seo": { "title": "LGBTQ+ & queer community at PoliTO | Collettivo Alan Turing", "description": "Find LGBT and queer community at Politecnico di Torino (PoliTO). Collettivo Alan Turing offers a safe space, public events and ways to get involved.", "image": "" },
+  "safeSpace": "We are a safe space for every student who needs one.",
+  "hero": { "enabled": true, "image": "", "alt": "", "focusX": 50, "focusY": 50 },
+  "intro": "We are Collettivo Alan Turing, an LGBTQ+ organisation and queer student community at Politecnico di Torino (PoliTO). We work to make our university and the community around us safer for everyone, and to support those who need a hand.\n\nThis is the goal that brings us together. Everyone who supports it is welcome to walk with us as we build a community that works towards a better tomorrow for all.\n\nWe believe that each of us has the power to make a difference. Your ideas, your opinions and the work you put into making things happen can help shape what we do next. Together, we can turn the things we care about into action. Your contribution could be the step that makes a difference in someone else’s life.\n\nWe also host public events to bring people together, raise awareness and build a healthier, more inclusive community.",
+  "invitations": "Want to get to know us? Explore the website or come along to [one of our events](/events/).\n\nWant to be part of the change? [Join Us](/join/).\n\nLooking for support? We’re here. Visit [Support & Resources](/resources/), or [get in touch](/contact/).",
+  "events": { "heading": "Upcoming Events", "intro": "", "count": 3, "action": { "label": "See All", "url": "/events/" }, "countdown": { "days": "Days", "hours": "Hours", "minutes": "Minutes", "seconds": "Seconds", "label": "Starts in {days} days, {hours} hours, {minutes} minutes and {seconds} seconds." } },
+  "news": { "heading": "Recent News & Articles", "intro": "", "count": 5, "action": { "label": "See All", "url": "/news/" } },
+  "supporters": { "heading": "Supporting Organisations" }
+}

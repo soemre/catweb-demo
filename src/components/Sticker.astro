@@ -1,0 +1,8 @@
+---
+interface Props { src: string; index?: number; class?: string; }
+const { src, index = 0, class: className } = Astro.props;
+const turns = [-8, 7, -4, 10, -6, 5];
+---
+{src && <span class:list={['sticker-cutout', className]} style={`--sticker-turn: ${turns[index % turns.length]}deg;`} aria-hidden="true">
+  <img src={src} alt="" width="128" height="128" loading="lazy" decoding="async" />
+</span>}
