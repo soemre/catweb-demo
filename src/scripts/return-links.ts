@@ -2,7 +2,11 @@ export type Origin = 'home' | 'events' | 'milestones' | 'news' | 'resources';
 
 const fromUrl = (url: URL): Origin | undefined => {
   if (url.origin !== location.origin) return;
-  const path = url.pathname;
+  const base = (import.meta.env.BASE_URL ?? '/').replace(/\/+$/, '');
+  let path = url.pathname;
+  if (base && (path === base || path.startsWith(`${base}/`))) {
+    path = path.slice(base.length) || '/';
+  }
   if (path === '/') return 'home';
   if (path === '/events/') return 'events';
   if (path === '/milestones/') return 'milestones';

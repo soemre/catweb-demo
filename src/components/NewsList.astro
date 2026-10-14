@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { pages, site } from '../lib/content';
 import { formatDate } from '../lib/dates';
+import { withBase } from '../lib/urls';
 import Sticker from './Sticker.astro';
 interface Props { entries: CollectionEntry<'news'>[]; selected?: string; current?: 'page' | 'true'; home?: boolean; }
 const { entries, selected, current = 'page', home = false } = Astro.props;
@@ -9,7 +10,7 @@ const prefix = home ? 'home-news' : 'news-list';
 ---
 {entries.length ? <ol class:list={['news-list', { 'news-list-home': home }]} data-news-list={home ? undefined : true} data-home-news-list={home ? true : undefined}>
   {entries.map(({ data }, index) => <li>
-    <a class="news-list-link" href={`/news/${data.slug}/`} data-news-link={home ? undefined : true} aria-labelledby={`${prefix}-title-${data.slug}`} aria-describedby={`${prefix}-meta-${data.slug}`} aria-current={selected === data.slug ? current : undefined}>
+    <a class="news-list-link" href={withBase(`/news/${data.slug}/`)} data-news-link={home ? undefined : true} aria-labelledby={`${prefix}-title-${data.slug}`} aria-describedby={`${prefix}-meta-${data.slug}`} aria-current={selected === data.slug ? current : undefined}>
       <div class="news-list-info">
         <h3 id={`${prefix}-title-${data.slug}`}>{data.title}</h3>
         <p class="news-list-meta" id={`${prefix}-meta-${data.slug}`}><time datetime={data.date}>{formatDate(data.date!, site.dateLocale)}</time> · {pages.news.categories[data.category]}</p>

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getResources, site } from '../../lib/content';
+import { withBase } from '../../lib/urls';
 import { formatDate } from '../../lib/dates';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import RichText from '../../components/RichText.astro';
@@ -12,11 +13,11 @@ const { entry } = Astro.props, resource = entry.data;
 <SiteLayout title={resource.title} description={resource.summary} image={resource.image} seo={resource.seo}>
   <ReturnLinks class="return-links" allowed={['resources']} defaults={['resources']} />
   <h1>{resource.title}</h1><p>{resource.summary}</p>
-  {resource.image && <img class="cover" src={resource.image} alt={resource.imageAlt} />}
+  {resource.image && <img class="cover" src={withBase(resource.image)} alt={resource.imageAlt} />}
   {resource.provider && <p>{site.ui.resource.provider}: {resource.provider}</p>}
   {resource.checked && <p>{site.ui.resource.checked}: <time datetime={resource.checked}>{formatDate(resource.checked, site.dateLocale)}</time></p>}
   {resource.status === 'published' && <RichText text={entry.body} />}
   {resource.status === 'preview' && resource.kind === 'guide' && <p class="muted" data-resource-preview>{site.ui.resource.preview}</p>}
-  {resource.url && <p><a href={resource.url}>{resource.kind === 'external' ? site.ui.resource.external : site.ui.resource.official}</a></p>}
-  {resource.file && <p><a href={resource.file}>{site.ui.resource.file}</a></p>}
+  {resource.url && <p><a href={withBase(resource.url)}>{resource.kind === 'external' ? site.ui.resource.external : site.ui.resource.official}</a></p>}
+  {resource.file && <p><a href={withBase(resource.file)}>{site.ui.resource.file}</a></p>}
 </SiteLayout>

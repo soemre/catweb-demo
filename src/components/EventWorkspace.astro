@@ -2,11 +2,18 @@
 import type { CollectionEntry } from 'astro:content';
 import { pages, site } from '../lib/content';
 import { jsonForHtml } from '../lib/seo';
+import { withBase } from '../lib/urls';
 import EventAgenda from './EventAgenda.astro';
 import Icon from './Icon.astro';
 interface Props { entries: CollectionEntry<'events'>[]; }
 const { entries } = Astro.props, settings = pages.events;
-const events = entries.map(({ data }) => ({ ...data, href: `/events/${data.slug}/` }));
+const events = entries.map(({ data }) => ({
+  ...data,
+  href: withBase(`/events/${data.slug}/`),
+  sticker: withBase(data.sticker),
+  calendarImage: withBase(data.calendarImage),
+  image: withBase(data.image),
+}));
 const payload = { events, settings, labels: site.ui.event, locale: site.dateLocale };
 ---
 <div class="events-workspace" data-event-workspace data-event-ready="false">

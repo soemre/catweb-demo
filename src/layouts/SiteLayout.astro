@@ -8,6 +8,7 @@ import EmailLink from '../components/EmailLink.astro';
 import Icon from '../components/Icon.astro';
 import { analyticsConfig } from '../lib/analytics';
 import { plainText, structuredData, jsonForHtml } from '../lib/seo';
+import { withBase } from '../lib/urls';
 interface Props { title: string; description?: string; image?: string; seo?: { title?: string; description?: string; image?: string }; noindex?: boolean; currentSection?: keyof typeof site.navigation; wide?: boolean; }
 const { title, description = site.description, image = '', seo, noindex = false, currentSection, wide = false } = Astro.props;
 const fullTitle = `${title} · ${site.name}`;
@@ -20,8 +21,9 @@ const analyticsHostname = Astro.site!.hostname;
 const fullWidthSlot = Astro.slots.has('full-width') || Astro.slots.has('opening');
 const navKeys = ['home', 'events', 'milestones', 'news', 'resources', 'contact'] as const;
 const isCurrent = (destination: string) => {
-  const url = new URL(destination, Astro.site);
-  return url.origin === Astro.site!.origin && (Astro.url.pathname === url.pathname || (url.pathname !== '/' && Astro.url.pathname.startsWith(url.pathname)));
+  const target = withBase(destination);
+  const rootPath = withBase('/');
+  return Astro.url.pathname === target || (target !== rootPath && Astro.url.pathname.startsWith(target));
 };
 ---
 <!doctype html>
@@ -30,9 +32,9 @@ const isCurrent = (destination: string) => {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <link rel="preload" href="/fonts/ApfelGrotezk-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/ApfelGrotezk-Mittel.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/ApfelGrotezk-Fett.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={withBase('/fonts/ApfelGrotezk-Regular.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={withBase('/fonts/ApfelGrotezk-Mittel.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={withBase('/fonts/ApfelGrotezk-Fett.woff2')} as="font" type="font/woff2" crossorigin />
     <script is:inline>
       // Runs before CSS paints; storage can be unavailable in private/restricted browsers.
       (() => {
@@ -55,7 +57,7 @@ const isCurrent = (destination: string) => {
     <meta name="twitter:card" content={sharingImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={sharingTitle} />
     <meta name="twitter:description" content={metaDescription} />
-    {sharingImage && <><meta property="og:image" content={new URL(sharingImage, Astro.site).href} /><meta name="twitter:image" content={new URL(sharingImage, Astro.site).href} /></>}
+    {sharingImage && <><meta property="og:image" content={new URL(withBase(sharingImage), Astro.site).href} /><meta name="twitter:image" content={new URL(withBase(sharingImage), Astro.site).href} /></>}
     {noindex && <meta name="robots" content="noindex" />}
     {!noindex && <script is:inline type="application/ld+json" data-site-structured-data set:html={jsonForHtml(structuredData(site, Astro.site!.href, canonical, fullTitle, metaDescription))} />}
   </head>
@@ -65,7 +67,7 @@ const isCurrent = (destination: string) => {
       <div class="topbar">
         <SiteBrand />
         <nav id="site-navigation" class="primary-nav" data-site-navigation aria-label={site.ui.navigation}>
-          <ul>{navKeys.map((key) => { const item = site.navigation[key]; return <li><a href={item.url} aria-current={(currentSection ? currentSection === key : isCurrent(item.url)) ? 'page' : undefined}>{item.label}</a></li>; })}</ul>
+          <ul>{navKeys.map((key) => { const item = site.navigation[key]; const href = withBase(item.url); return <li><a href={href} aria-current={(currentSection ? currentSection === key : isCurrent(item.url)) ? 'page' : undefined}>{item.label}</a></li>; })}</ul>
         </nav>
         <div class="header-actions">
           <div class="theme-control" role="group" aria-label={site.ui.theme.label} data-theme-control data-light-label={site.ui.theme.light} data-dark-label={site.ui.theme.dark} data-toggle-label={site.ui.theme.toggleLabel} hidden>
@@ -74,7 +76,7 @@ const isCurrent = (destination: string) => {
               <Icon name="moon" class="theme-icon theme-moon" />
             </button>
           </div>
-          <a class="button header-join" data-join-cta href={site.navigation.join.url} aria-current={isCurrent(site.navigation.join.url) ? 'page' : undefined}>{site.navigation.join.label}</a>
+          <a class="button header-join" data-join-cta href={withBase(site.navigation.join.url)} aria-current={isCurrent(site.navigation.join.url) ? 'page' : undefined}>{site.navigation.join.label}</a>
           <button class="menu-toggle" type="button" data-menu-toggle aria-controls="site-navigation" aria-expanded="false" hidden>
             <span class="sr-only">{site.ui.menu}</span>
             <Icon name="menu" class="menu-open" />

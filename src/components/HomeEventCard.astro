@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { pages, site } from '../lib/content';
 import { formatInstant } from '../lib/dates';
+import { withBase } from '../lib/urls';
 import Sticker from './Sticker.astro';
 interface Props { entry: CollectionEntry<'events'>; }
 const { entry } = Astro.props, event = entry.data;
@@ -18,7 +19,7 @@ const units = ['days', 'hours', 'minutes', 'seconds'] as const;
     </div>
   </div>
   <div class="home-event-title-row">
-    <h3 id={`home-event-title-${event.slug}`}><a href={`/events/${event.slug}/`}>{event.title}</a></h3>
+    <h3 id={`home-event-title-${event.slug}`}><a href={withBase(`/events/${event.slug}/`)}>{event.title}</a></h3>
     <Sticker src={event.sticker || event.calendarImage} class="home-event-sticker" />
   </div>
   <p class="home-event-dates"><time datetime={event.start}>{formatInstant(event.start!, site.dateLocale)}</time><br />– <time datetime={event.end}>{formatInstant(event.end!, site.dateLocale)}</time></p>

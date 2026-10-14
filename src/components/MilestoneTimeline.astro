@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { pages, site } from '../lib/content';
 import { formatDate } from '../lib/dates';
+import { withBase } from '../lib/urls';
 import Sticker from './Sticker.astro';
 
 interface Props { entries: CollectionEntry<'news'>[]; }
@@ -28,7 +29,7 @@ const positionFor = (index: number, columns: number) => {
           <span class:list={['milestone-connection', 'milestone-connection-wide', `connection-${wide.connection}`]} aria-hidden="true" />
           <span class:list={['milestone-connection', 'milestone-connection-narrow', `connection-${narrow.connection}`]} aria-hidden="true" />
         </>}
-        <a class="milestone-link" href={`/news/${data.slug}/`} aria-labelledby={titleId} aria-describedby={`${dateId} ${hintId}`}>
+        <a class="milestone-link" href={withBase(`/news/${data.slug}/`)} aria-labelledby={titleId} aria-describedby={`${dateId} ${hintId}`}>
           <span class="milestone-marker" aria-hidden="true">
             <Sticker src={data.sticker} index={index} class="milestone-sticker" />
             <svg class="milestone-ring" viewBox="0 0 56 56" fill="none" focusable="false"><circle cx="28" cy="28" r="22" pathLength="1" /></svg>

@@ -7,6 +7,7 @@ import HomeHero from '../../components/HomeHero.astro';
 import { homeHeroSchema } from '../../lib/schemas';
 import { getCollection } from 'astro:content';
 import { getEvents, getNews, pages } from '../../lib/content';
+import { withBase } from '../../lib/urls';
 import { selectSupporterImages } from '../../lib/supporters';
 export function getStaticPaths() { return ['countdown', 'few', 'empty', 'hidden', 'single', 'hero', 'hero-empty', 'hero-disabled'].map((kind) => ({ params: { kind }, props: { kind } })); }
 interface Props { kind: string; }
@@ -34,7 +35,7 @@ const supporters = ['empty', 'hidden'].includes(kind) ? [] : kind === 'single' ?
   <HomeHero hero={hero} headline="Home layout fixture" safeSpace="A safe space to arrive and take part." slot="opening" />
   {!heroActive && <h1>Home layout fixture</h1>}
   {kind.startsWith('hero') && <div data-home-introduction><p>The opening content overlaps the photograph and then continues naturally into the page.</p><p>A longer introduction follows, with enough room to describe the community and the ways people can join.</p></div>}
-  {eventCount > 0 && <section data-home-events><h2>{pages.home.events.heading}</h2><EventBrowser entries={events} count={eventCount} /><p><a href="/events/" data-home-events-action>All events</a></p></section>}
+  {eventCount > 0 && <section data-home-events><h2>{pages.home.events.heading}</h2><EventBrowser entries={events} count={eventCount} /><p><a href={withBase('/events/')} data-home-events-action>All events</a></p></section>}
   {newsCount > 0 && <section data-home-news><h2>{pages.home.news.heading}</h2><NewsList entries={news} home /></section>}
   <SupporterStrip entries={supporters} slot="full-width" />
 </SiteLayout>

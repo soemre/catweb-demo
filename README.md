@@ -40,10 +40,12 @@ npm run dev -- --host 0.0.0.0 --allowed-hosts nixos --port 4321
 The same flags work with `npm run preview` for the built site.
 
 ```sh
-npm run check       # content/CMS validation and Astro/TypeScript diagnostics
-npm test            # unit tests
-npm run build       # validate, build dist/, check internal links/media/hosting limits
-npm run preview     # serve the production build locally
+npm run check          # content/CMS validation and Astro/TypeScript diagnostics
+npm test               # unit tests
+npm run build          # validate, build dist/, check internal links/media/hosting limits
+npm run preview        # serve the production build locally
+npm run build:pages    # build for GitHub Pages with base /catweb-demo
+npm run preview:pages  # preview GitHub Pages build locally
 ```
 
 For browser tests, first run the production build, then:
@@ -245,6 +247,32 @@ The checked-in `.nvmrc` / `.node-version` also pin Node. Pages v3 does not infer
 The GitHub workflow runs validation, type checks, unit tests, build and Chromium checks after pushes/PRs when the repository is connected. It is configured locally, not yet run on GitHub. CI and Pages builds are independent; a CI result is not itself a Pages deployment gate.
 
 Current Pages Free limits include **500 builds/month**, **one build at a time**, **20,000 files/site**, **25 MiB/file** and a **20-minute build timeout**. The project checks the file count/asset size limits. CMS saves/uploads consume commits and can trigger additional builds. Keep to included GitHub Actions allowances for the chosen repository plan. Domain registration/renewal remains a separate existing registrar cost.
+
+## GitHub Pages deployment (Demo publication)
+
+The site is configured to deploy directly to GitHub Pages at **https://soemre.github.io/catweb-demo/**, intentionally including all 148 demo records and 39 local assets to serve as an interactive demo of the full site.
+
+### One-time repository setup on GitHub
+
+1. Open the repository on GitHub: **Settings → Pages**.
+2. Under **Build and deployment → Source**, select **GitHub Actions** (not "Deploy from a branch").
+3. Ensure GitHub Actions workflow permissions allow Pages deployment: **Settings → Actions → General → Workflow permissions** set to **Read and write permissions** (or allow the workflow's explicit `pages: write` and `id-token: write` permissions).
+
+### Automated deployment workflow
+
+The repository includes [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which automatically:
+- Triggers on every `push` to `main` (and can be triggered manually via `workflow_dispatch`).
+- Checks out the repository, installs dependencies via `npm ci`, and validates content/types (`npm run check`).
+- Builds the site using `GITHUB_PAGES=true npm run build`, which sets `site` to `https://soemre.github.io` and `base` to `/catweb-demo`.
+- Uploads the `dist/` directory as a Pages artifact using `actions/upload-pages-artifact@v3`.
+- Deploys the artifact to GitHub Pages via `actions/deploy-pages@v4`.
+
+### Subpath handling and assets
+
+- **Jekyll bypass**: [`public/.nojekyll`](public/.nojekyll) is copied to `dist/.nojekyll` during build. This instructs GitHub Pages not to run Jekyll processing, preventing the silently dropped `_astro/` asset directory and 404s on stylesheets and scripts.
+- **Dynamic base URL**: [`src/lib/urls.ts`](src/lib/urls.ts) exposes `withBase` and `stripBase` helper functions that safely prepend `import.meta.env.BASE_URL` across internal links, images, preloads, and client routing without breaking external URLs, hash anchors, or mailto links.
+- **Self-hosted fonts**: `@font-face` rules in [`src/styles/global.css`](src/styles/global.css) use relative font paths (`url('../fonts/ApfelGrotezk-*.woff2')`), allowing the browser to resolve font files correctly relative to the emitted CSS in `_astro/` across both root and subpath deployments.
+- **Demo records**: The 148 demo events, news articles, resources, achievements, and supporters are committed in the repository so the published demo site is fully populated and interactive out of the box.
 
 ## Cloudflare Web Analytics
 

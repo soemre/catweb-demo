@@ -24,4 +24,11 @@ The website works locally. These inputs complete the editorial content and accou
 - [ ] Enable Pages Web Analytics in dashboard mode and redeploy, or explicitly configure manual mode with its public site token and dashboard injection disabled. Confirm the apex hostname/EU visitor settings, one beacon and real visits/page views/performance data from Italy. Tracking is not connected yet.
 - [ ] After deployment, verify the domain in Google Search Console/Bing Webmaster Tools, submit the sitemap, inspect real indexing/canonicals and structured data, and check hosting rules permit search crawlers including OAI-SearchBot. `robots.txt` permits crawling and explicitly allows OAI-SearchBot.
 
+## GitHub Pages demo publication
+
+- [ ] In the GitHub repository **Settings → Pages**, set **Source** to **GitHub Actions**.
+- [ ] Ensure **Settings → Actions → General → Workflow permissions** allows read and write permissions for workflows.
+- [ ] Push the commit to `main` to trigger the automated deployment workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+- [ ] Verify the live demo site at **https://soemre.github.io/catweb-demo/**, including all 148 demo records, images, theme toggle, calendar agenda, and milestone timeline.
+
 Form responses and membership records belong in the chosen form service, outside this public-content repository. Detailed commands and connection/cutover steps are in [README.md](README.md).

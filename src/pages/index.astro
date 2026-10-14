@@ -8,6 +8,7 @@ import NewsList from '../components/NewsList.astro';
 import SupporterStrip from '../components/SupporterStrip.astro';
 import HomeHero from '../components/HomeHero.astro';
 import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/urls';
 const page = pages.home;
 const events = await getEvents();
 const news = (await getNews()).slice(0, page.news.count);
@@ -24,7 +25,7 @@ const heroActive = homeHero.enabled && Boolean(homeHero.image);
   {page.events.count > 0 && <section data-home-events>
     <div class="section-heading">
       <h2 id="home-events-heading">{page.events.heading}</h2>
-      <a class="see-all" href={page.events.action.url} data-home-events-action aria-labelledby="home-events-see-all home-events-heading"><span id="home-events-see-all">{page.events.action.label}</span><Icon name="caret-right" /></a>
+      <a class="see-all" href={withBase(page.events.action.url)} data-home-events-action aria-labelledby="home-events-see-all home-events-heading"><span id="home-events-see-all">{page.events.action.label}</span><Icon name="caret-right" /></a>
     </div>
     <RichText text={page.events.intro} />
     <EventBrowser entries={events} count={page.events.count} />
@@ -32,7 +33,7 @@ const heroActive = homeHero.enabled && Boolean(homeHero.image);
   {page.news.count > 0 && <section data-home-news>
     <div class="section-heading">
       <h2 id="home-news-heading">{page.news.heading}</h2>
-      <a class="see-all" href={page.news.action.url} aria-labelledby="home-news-see-all home-news-heading"><span id="home-news-see-all">{page.news.action.label}</span><Icon name="caret-right" /></a>
+      <a class="see-all" href={withBase(page.news.action.url)} aria-labelledby="home-news-see-all home-news-heading"><span id="home-news-see-all">{page.news.action.label}</span><Icon name="caret-right" /></a>
     </div>
     <RichText text={page.news.intro} />
     <NewsList entries={news} home />

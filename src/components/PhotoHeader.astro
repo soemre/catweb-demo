@@ -1,5 +1,6 @@
 ---
 import { pages, site } from '../lib/content';
+import { withBase } from '../lib/urls';
 import Icon from './Icon.astro';
 interface Props { photos: { image: string; alt: string; caption: string }[]; slug: string; }
 const { photos, slug } = Astro.props;
@@ -10,7 +11,7 @@ const trackId = `article-photos-${slug}`;
 {photos.length > 0 && <div class="photo-header" data-photo-header role="region" aria-label={site.ui.event.gallery} data-position-label={controls.photoPosition}>
   <div class="photo-track" data-photo-track id={trackId} tabindex={photos.length > 1 ? 0 : undefined}>
     {photos.map((photo, index) => <figure class="photo-slide" data-photo-slide role="group" aria-label={position(index)}>
-      <img class="photo-header-image" src={photo.image} alt={photo.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+      <img class="photo-header-image" src={withBase(photo.image)} alt={photo.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
       {photo.caption && <figcaption>{photo.caption}</figcaption>}
     </figure>)}
   </div>

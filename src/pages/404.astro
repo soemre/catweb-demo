@@ -1,7 +1,8 @@
 ---
 import { site } from '../lib/content';
+import { withBase } from '../lib/urls';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import RichText from '../components/RichText.astro';
 const page = site.ui.notFound;
 ---
-<SiteLayout title={page.title} noindex><h1>{page.title}</h1><RichText text={page.body} /><a class="button" href={page.action.url}>{page.action.label}</a></SiteLayout>
+<SiteLayout title={page.title} noindex><h1>{page.title}</h1><RichText text={page.body} /><a class="button" href={withBase(page.action.url)}>{page.action.label}</a></SiteLayout>

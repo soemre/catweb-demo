@@ -2,11 +2,12 @@
 import type { CollectionEntry } from 'astro:content';
 import { pages, site } from '../lib/content';
 import { jsonForHtml } from '../lib/seo';
+import { withBase } from '../lib/urls';
 import HomeEventCard from './HomeEventCard.astro';
 interface Props { entries: CollectionEntry<'events'>[]; count?: number; }
 const { entries, count = 3 } = Astro.props;
 const payload = {
-  events: entries.map(({ data }) => ({ ...data, href: `/events/${data.slug}/` })),
+  events: entries.map(({ data }) => ({ ...data, href: withBase(`/events/${data.slug}/`) })),
   countdown: pages.home.events.countdown, count, homeEmpty: site.ui.empty.events,
 };
 ---

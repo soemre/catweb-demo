@@ -1,11 +1,12 @@
 ---
 import type { HomeHeroData } from '../lib/schemas';
+import { withBase } from '../lib/urls';
 interface Props { hero: HomeHeroData; headline: string; safeSpace: string; }
 const { hero, headline, safeSpace } = Astro.props;
 ---
 {hero.enabled && hero.image && <section class="home-hero" data-home-hero aria-labelledby="home-headline" style={`--hero-focus-x: ${hero.focusX}%; --hero-focus-y: ${hero.focusY}%;`}>
   <div class="home-hero-media" data-hero-media>
-    <img src={hero.image} alt={hero.alt} loading="eager" fetchpriority="high" decoding="async" />
+    <img src={withBase(hero.image)} alt={hero.alt} loading="eager" fetchpriority="high" decoding="async" />
   </div>
   <div class="home-hero-copy shell">
     <h1 id="home-headline">{headline}</h1>

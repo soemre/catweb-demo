@@ -5,7 +5,11 @@ const root = resolve(process.argv[2]);
 const port = Number(process.argv[3]);
 const types: Record<string, string> = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.txt': 'text/plain', '.xml': 'application/xml' };
 createServer(async (request, response) => {
-  let path = resolve(root, `.${decodeURIComponent(new URL(request.url!, 'http://localhost').pathname)}`);
+  let pathname = decodeURIComponent(new URL(request.url!, 'http://localhost').pathname);
+  if (pathname === '/catweb-demo' || pathname.startsWith('/catweb-demo/')) {
+    pathname = pathname.slice('/catweb-demo'.length) || '/';
+  }
+  let path = resolve(root, `.${pathname}`);
   if (!path.startsWith(`${root}/`) && path !== root) { response.writeHead(403).end(); return; }
   try {
     if ((await stat(path)).isDirectory()) path += '/index.html';

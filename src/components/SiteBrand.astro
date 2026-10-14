@@ -1,9 +1,10 @@
 ---
 import { site } from '../lib/content';
+import { withBase } from '../lib/urls';
 ---
-<a class="identity" href={site.navigation.home.url} aria-label={site.name}>
+<a class="identity" href={withBase(site.navigation.home.url)} aria-label={site.name}>
   {site.logo ? <span class:list={['brand-logos', { 'brand-logos-pair': Boolean(site.logoDark), 'brand-logos-single': !site.logoDark }]}>
-    <img class="brand-logo brand-logo-light" src={site.logo} alt={site.logoAlt || site.name} width="180" height="81" />
-    {site.logoDark && <img class="brand-logo brand-logo-dark" src={site.logoDark} alt={site.logoAlt || site.name} width="180" height="81" />}
+    <img class="brand-logo brand-logo-light" src={withBase(site.logo)} alt={site.logoAlt || site.name} width="180" height="81" />
+    {site.logoDark && <img class="brand-logo brand-logo-dark" src={withBase(site.logoDark)} alt={site.logoAlt || site.name} width="180" height="81" />}
   </span> : <span class="brand-name">{site.name}</span>}
 </a>

@@ -2,6 +2,7 @@
 import type { PublicEvent } from '../lib/events';
 import { formatAgendaDate, formatEventRange, groupEventsByDay } from '../lib/event-agenda';
 import { pages, site } from '../lib/content';
+import { withBase } from '../lib/urls';
 interface Props { events: PublicEvent[]; }
 const { events } = Astro.props;
 const groups = groupEventsByDay(events), settings = pages.events;
@@ -17,7 +18,7 @@ const groups = groupEventsByDay(events), settings = pages.events;
       <ul>
         {entries.map((event) => <li class="event-agenda-row" data-agenda-event={event.slug}>
           <div class="event-agenda-info">
-            <a href={event.href}>{event.title}</a>
+            <a href={withBase(event.href)}>{event.title}</a>
             <p class="event-agenda-time">{formatEventRange(event, site.dateLocale)}</p>
           </div>
           <span class="calendar-event-state" data-agenda-status={event.slug}>{event.cancelled ? site.ui.event.cancelled : ''}</span>
